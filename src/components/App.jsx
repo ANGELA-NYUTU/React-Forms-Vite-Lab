@@ -1,22 +1,42 @@
-import React, { useState } from "react";
-import ShoppingList from "./ShoppingList";
+import { useState } from "react";
 import Header from "./Header";
-import itemData from "../data/items";
+import Filter from "./Filter";
+import ItemForm from "./ItemForm";
+import ShoppingList from "./ShoppingList";
 
-function App() {
-  const [items, setItems] = useState(itemData);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+const INITIAL_ITEMS = [
+  { id: 1, name: "Apple", category: "Produce" },
+  { id: 2, name: "Milk", category: "Dairy" },
+  { id: 3, name: "Bread", category: "Bakery" }
+];
 
-  function handleDarkModeClick() {
-    setIsDarkMode((isDarkMode) => !isDarkMode);
+export default function App() {
+  const [items, setItems] = useState(INITIAL_ITEMS);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
+
+  function handleItemFormSubmit(newItem) {
+    setItems([...items, newItem]);
   }
 
   return (
-    <div className={"App " + (isDarkMode ? "dark" : "light")}>
-      <Header isDarkMode={isDarkMode} onDarkModeClick={handleDarkModeClick} />
-      <ShoppingList items={items} />
+    <div>
+      <Header />
+
+      <Filter
+        search={search}
+        onSearchChange={setSearch}
+        category={category}
+        onCategoryChange={setCategory}
+      />
+
+      <ItemForm onItemFormSubmit={handleItemFormSubmit} />
+
+      <ShoppingList
+        items={items}
+        search={search}
+        category={category}
+      />
     </div>
   );
 }
-
-export default App;
